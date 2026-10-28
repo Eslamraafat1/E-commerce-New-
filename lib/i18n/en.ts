@@ -1,0 +1,161 @@
+/** English dictionary — the master list of keys. ar.ts must provide every key. */
+export const en = {
+  "meta.description": "VANTA is a demo concept store: a cinematic, multi-category shopping experience built with Next.js.",
+
+  // common
+  "common.all": "All", "common.back": "Back", "common.cancel": "Cancel", "common.close": "Close", "common.continue": "Continue",
+  "common.edit": "Edit", "common.loading": "Loading…", "common.next": "Next", "common.prev": "Previous", "common.retry": "Try again",
+  "common.save": "Save", "common.viewAll": "View all",
+
+  // a11y
+  "a11y.skip": "Skip to content", "a11y.openMenu": "Open menu", "a11y.menu": "Menu", "a11y.mainNav": "Main navigation",
+  "a11y.toggleTheme": "Toggle light / dark theme", "a11y.switchLanguage": "Switch language to {lang}", "a11y.scrollProgress": "Page scroll progress",
+  "a11y.backToTop": "Back to top", "a11y.breadcrumb": "Breadcrumb", "a11y.notifications": "Notifications", "a11y.sectionNav": "Page sections",
+
+  // nav
+  "nav.home": "Home", "nav.shop": "Shop", "nav.shopAll": "Shop all", "nav.categories": "Categories", "nav.collections": "Collections",
+  "nav.new": "New arrivals", "nav.best": "Best sellers", "nav.journal": "Journal", "nav.about": "About", "nav.contact": "Contact",
+  "nav.faq": "FAQ", "nav.account": "Account", "nav.wishlist": "Wishlist", "nav.cart": "Cart", "nav.admin": "Admin (demo)",
+
+  // search
+  "search.open": "Search", "search.placeholder": "Search products, categories…", "search.placeholderShort": "Search", "search.results": "Search results",
+  "search.products": "Products", "search.suggestions": "Suggestions", "search.all": "All results", "search.seeAll": "See all results for “{q}”",
+  "search.go": "Go", "search.actions": "Actions", "search.openCart": "Open cart", "search.eyebrow": "Search", "search.title": "Search results",
+  "search.sub": "Filter and sort to find exactly what you need.",
+
+  // hero & homepage
+  "hero.eyebrow": "Concept store — multi-category", "hero.line1": "BEYOND", "hero.line2": "SHOPPING.",
+  "hero.sub": "A cinematic store for objects worth owning. Fashion, audio, home, beauty and more — in one considered place.",
+  "hero.cta1": "Shop the collection", "hero.cta2": "Explore collections", "hero.scroll": "Scroll",
+  "marquee.label": "Brand values", "marquee.1": "Considered design", "marquee.2": "Multi-category", "marquee.3": "Cinematic motion", "marquee.4": "Built to adapt", "marquee.5": "Arabic & English", "marquee.6": "Light & dark",
+  "cat.eyebrow": "Category universe", "cat.title": "Pick a world.", "cat.sub": "Seven categories, each with its own character. Swap them for your niche in one config file.", "cat.all": "All categories",
+  "cat.configurable": "Categories are configurable data: this store can specialise in any niche.",
+  "story.eyebrow": "Featured story", "story.cta": "Discover the product", "story.demo": "Demo content: sample product data and photography.",
+  "trend.eyebrow": "Trending now", "trend.title": "What everyone is adding.",
+  "show.eyebrow": "Showcase", "show.title": "A gallery in motion.", "show.more": "See the full catalog",
+  "new.eyebrow": "Just landed", "new.title": "New arrivals.", "new.sub": "The latest additions, newest first.",
+  "best.eyebrow": "Best sellers", "best.title": "The ones that stay.", "best.sub": "Ranked by popularity in the demo data.", "best.rank": "No. {n}",
+  "focus.eyebrow": "Product in focus", "focus.s1": "Soft pastel, built for easy days. Cushioned footbed and a clean low profile.", "focus.s2": "Deep burgundy for evenings. The same last, a richer attitude.", "focus.s3": "Pure noir. Nothing extra, everything essential.",
+  "spot.eyebrow": "Texture lab", "spot.title": "Feel the material.", "spot.sub": "Move your cursor across the image to reveal colour and texture. On touch screens the full-colour image is shown.", "spot.hint": "Move to reveal",
+  "bento.eyebrow": "Bento", "bento.title": "Everything, at a glance.", "bento.category": "Category", "bento.promo": "Demo offer", "bento.promoTitle": "15% off your first order.", "bento.promoText": "Use the demo code on orders over {amount}:",
+  "bento.pick": "Editor’s pick", "bento.why": "Why VANTA", "bento.whyTitle": "One store. Every niche.", "bento.tap": "Tap to flip", "bento.flip": "Flip card", "bento.back1": "Config-driven catalog.", "bento.back2": "Brand, colours, categories and policies live in one place, ready for your products.",
+  "bento.search": "Find fast", "bento.searchTitle": "Looking for something?",
+  "disc.eyebrow": "Discovery", "disc.title": "Find your next favourite.", "disc.placeholder": "Try “headphones” or “sofa”", "disc.trending": "Popular searches",
+  "life.eyebrow": "Shop by lifestyle", "life.title": "Who are you today?",
+  "col.eyebrow": "Premium collections", "col.title": "Curated campaigns.", "col.sub": "Hand-picked edits that bring the catalog together.", "col.campaign": "Campaign",
+  "story2.eyebrow": "Our story", "story2.text": "We believe a store can feel like a place. VANTA brings design, sound, light and texture together so that choosing something feels as good as owning it.",
+  "ben.title": "Shopping benefits", "ben.ship": "Free shipping", "ben.shipText": "On standard delivery for orders over {amount}.", "ben.returns": "Easy returns", "ben.returnsText": "Return within {days} days.",
+  "ben.support": "Customer support", "ben.supportText": "Available {hours}.", "ben.pay": "Flexible payment", "ben.payText": "Card, cash on delivery or wallet at checkout.", "ben.track": "Order tracking", "ben.trackText": "Follow your order from your account.",
+  "ben.demo": "Benefits reflect the configured demo store policy.",
+  "jr.eyebrow": "Journal", "jr.title": "Guides & inspiration.", "jr.sub": "Buying guides, style notes and home ideas.", "jr.read": "{n} min read", "jr.more": "Keep reading", "jr.demo": "Sample editorial content for the demo store.",
+  "tm.eyebrow": "Testimonials", "tm.title": "Kind words.", "tm.sample": "Sample review",
+  "newsletter.eyebrow": "Newsletter", "newsletter.title": "Be first to the next drop.", "newsletter.text": "New arrivals, restocks and guides. No spam.", "newsletter.label": "Email address", "newsletter.placeholder": "you@example.com", "newsletter.cta": "Subscribe",
+  "newsletter.demoNote": "Demo mode: no email service is connected, so nothing is subscribed.", "newsletter.demoDone": "Thanks — your address looks valid. This is a demo: no subscription was created because no email service is connected.",
+  "faq.eyebrow": "Questions", "faq.title": "Frequently asked.",
+  "faq.q1": "Is this a real store?", "faq.a1": "No. VANTA is a demo concept store. Products, prices, reviews and orders are sample data and nothing is charged or shipped.",
+  "faq.q2": "How long does delivery take?", "faq.a2": "Delivery times depend on the method you choose at checkout. See the shipping policy for the configured values.",
+  "faq.q3": "Can I return an item?", "faq.a3": "Returns are accepted within the window set in the returns policy.",
+  "faq.q4": "Which payment methods are supported?", "faq.a4": "The demo checkout lists card, cash on delivery and wallet. No card details are collected and no payment is processed.",
+  "faq.q5": "Do discount codes work?", "faq.a5": "Yes, three demo codes work in the cart: VANTA10, WELCOME15 (minimum order applies) and FREESHIP. Rules are listed under the code field.",
+  "faq.q6": "Is my cart saved?", "faq.a6": "Your cart, wishlist and recently viewed items are saved in this browser only (local storage).",
+  "cta.eyebrow": "The doors are open", "cta.title": "Step inside.", "cta.primary": "Start shopping",
+  "footer.blurb": "A demo concept store for objects worth owning. Configure the brand, products and policies, then connect your backend.", "footer.newsletter": "Newsletter", "footer.shop": "Shop", "footer.support": "Support", "footer.policies": "Policies", "footer.social": "Social links",
+  "footer.rights": "All rights reserved.", "footer.demo": "Demo store: no real orders, payments or emails.",
+
+  // shop / catalog
+  "shop.eyebrow": "The catalog", "shop.title": "Shop all", "shop.sub": "Search, filter and sort the full demo catalog.",
+  "catalog.searchLabel": "Search the catalog", "catalog.searchPlaceholder": "Search the catalog…", "catalog.results": "{n} products", "catalog.showing": "Showing {shown} of {total}", "catalog.loadMore": "Load more",
+  "catalog.emptyTitle": "Nothing matches.", "catalog.emptyText": "Try removing a filter or searching for something broader.", "catalog.view": "View", "catalog.grid": "Grid view", "catalog.list": "List view",
+  "catalog.sampleNote": "Ratings and review counts are sample demo data.",
+  "filter.title": "Filters", "filter.clear": "Clear filters", "filter.remove": "Remove filter", "filter.show": "Show {n} results", "filter.category": "Category", "filter.price": "Price", "filter.min": "Minimum price", "filter.max": "Maximum price",
+  "filter.availability": "Availability", "filter.inStock": "In stock only", "filter.rating": "Rating", "filter.andUp": "& up", "filter.color": "Colour", "filter.size": "Size", "filter.type": "Type",
+  "sort.label": "Sort", "sort.featured": "Featured", "sort.newest": "Newest", "sort.best": "Best selling", "sort.price-asc": "Price: low to high", "sort.price-desc": "Price: high to low", "sort.rating": "Top rated",
+
+  // product
+  "badge.new": "New", "badge.sale": "Sale", "badge.limited": "Limited", "badge.best": "Best seller",
+  "product.addToCart": "Add to cart", "product.quickAdd": "Quick add", "product.quickView": "Quick view", "product.viewDetails": "View full details", "product.selectSize": "Select an option", "product.selectOptions": "Select options to see availability",
+  "product.choose": "Choose", "product.color": "Colour", "product.colorsCount": "{n} colours", "product.from": "From", "product.wasPrice": "Was {price}", "product.quantity": "Quantity", "product.image": "Image",
+  "product.inStock": "In stock", "product.lowStock": "Low stock", "product.onlyLeft": "Only {n} left", "product.soldOut": "Sold out", "product.unavailable": "Combination unavailable",
+  "product.share": "Share", "product.copyLink": "Copy link", "product.linkCopied": "Link copied", "product.gallery": "Product gallery", "product.info": "Product information",
+  "product.tabDetails": "Details", "product.tabSpecs": "Specifications", "product.tabShipping": "Shipping & returns", "product.tabReviews": "Reviews",
+  "product.detailsExtra": "Photography and descriptions are demo content.", "product.demoSpecs": "Specifications are sample demo data.", "product.noReviews": "No reviews yet.",
+  "product.reviewsDemo": "Ratings and review counts are sample demo data. No real customer reviews are shown.", "product.sampleRating": "Sample demo rating",
+  "product.shipLine": "Standard delivery in {days} days", "product.returnLine": "Free returns within {days} days", "product.demoLine": "Demo store: nothing is charged or shipped.",
+  "product.related": "You may also like",
+  "recent.title": "Recently viewed", "recent.sub": "Products you looked at in this browser.", "recent.emptyTitle": "Nothing viewed yet.", "recent.emptyText": "Products you open will appear here.",
+  "wishlist.add": "Add to wishlist", "wishlist.remove": "Remove from wishlist", "wishlist.added": "Saved to wishlist", "wishlist.removed": "Removed from wishlist", "wishlist.sub": "Saved in this browser.", "wishlist.emptyTitle": "Your wishlist is empty.", "wishlist.emptyText": "Tap the heart on any product to save it here.",
+
+  // cart
+  "cart.added": "{name} added to cart", "cart.addedClamped": "Added — limited to {max} in stock", "cart.unavailable": "This item is unavailable", "cart.view": "View cart", "cart.viewCart": "View cart", "cart.checkout": "Checkout",
+  "cart.continue": "Continue shopping", "cart.emptyTitle": "Your cart is empty.", "cart.emptyText": "Add something you love and it will show up here.", "cart.remove": "Remove", "cart.decrease": "Decrease quantity", "cart.increase": "Increase quantity",
+  "cart.maxReached": "Maximum available quantity ({max}) reached", "cart.items": "{n} items", "cart.summary": "Order summary", "cart.subtotal": "Subtotal", "cart.discount": "Discount", "cart.shipping": "Shipping", "cart.shippingEst": "Shipping (estimate)", "cart.free": "Free", "cart.total": "Total",
+  "cart.freeShipLeft": "Add {amount} more for free standard shipping", "cart.freeShipDone": "You’ve unlocked free standard shipping", "cart.code": "Discount code", "cart.apply": "Apply", "cart.codeRemove": "Remove",
+  "cart.codeApplied": "Code {code} applied", "cart.codeInvalid": "That code isn’t valid.", "cart.codeMin": "Requires a minimum subtotal of {amount}.", "cart.codeRules": "Demo code rules",
+  "cart.rule.VANTA10": "10% off the subtotal", "cart.rule.WELCOME15": "15% off for subtotals of {amount} or more", "cart.rule.FREESHIP": "Free shipping on any delivery method",
+  "cart.demoNote": "Demo store: your cart is stored in this browser only.",
+
+  // checkout
+  "checkout.customer": "Contact", "checkout.shipping": "Shipping address", "checkout.delivery": "Delivery", "checkout.payment": "Payment", "checkout.review": "Review", "checkout.steps": "Checkout steps",
+  "checkout.demoBanner": "Demo checkout — no real order is placed, no payment is taken and no email is sent.", "checkout.noCards": "No card details are collected in this demo. A real integration would use a hosted payment provider.",
+  "checkout.editCart": "Need to change items?", "checkout.place": "Place demo order", "checkout.placing": "Placing order…",
+  "ship.standard": "Standard delivery", "ship.express": "Express delivery", "ship.pickup": "Store pickup", "ship.pickupEta": "Ready next day", "ship.days": "days",
+  "pay.card": "Credit / debit card", "pay.cardText": "Demo only — card details are not collected.", "pay.cod": "Cash on delivery", "pay.codText": "Pay when your order arrives.", "pay.wallet": "Digital wallet", "pay.walletText": "Demo only — no wallet is connected.",
+  "confirm.title": "Demo order placed", "confirm.text": "This is a demo confirmation for {email}.", "confirm.number": "Order", "confirm.demo": "Demo only: this order is not saved on any server, no payment was processed and no email was sent. It appears in your order history in this browser.",
+  "confirm.notFound": "Order not found", "confirm.notFoundText": "Demo orders are only kept in the browser they were placed in.",
+
+  // forms
+  "form.required": "This field is required.", "form.email": "Enter a valid email address.", "form.email.label": "Email", "form.phone": "Use digits, spaces, + ( ) or - only.", "form.phone.label": "Phone",
+  "form.firstName": "First name", "form.lastName": "Last name", "form.name": "Full name", "form.address1": "Address", "form.address2": "Apartment, suite (optional)", "form.addressShort": "Enter your full address.",
+  "form.city": "City", "form.region": "State / region", "form.postal": "Postal code", "form.country": "Country", "form.optional": "optional", "form.password": "Password", "form.confirm": "Confirm password",
+  "form.passwordShort": "Use at least 8 characters.", "form.passwordMatch": "Passwords do not match.", "form.message": "Message", "form.messageShort": "Please write at least 10 characters.",
+
+  // auth & account
+  "auth.demoNote": "Demo authentication: no account is created, and passwords are never stored or sent.", "auth.demoSignedIn": "Signed in to the demo account (this browser only).",
+  "auth.login.title": "Log in", "auth.login.sub": "Welcome back.", "auth.login.cta": "Log in",
+  "auth.register.title": "Create account", "auth.register.sub": "Join the demo store.", "auth.register.cta": "Create account",
+  "auth.forgot.title": "Forgot password", "auth.forgot.sub": "Enter your email and we’ll show you how this will work.", "auth.forgot.cta": "Send reset link", "auth.forgot.demoDone": "Demo mode: no reset email was sent because no email service is connected.",
+  "account.eyebrow": "Customer area (demo)", "account.nav": "Account navigation", "account.dashboard": "Dashboard", "account.orders": "Orders", "account.profile": "Profile settings", "account.addresses": "Addresses",
+  "account.demo": "Demo interface: data shown here is stored in this browser only until a real backend is connected.", "account.hello": "Hello, {name}", "account.guest": "Welcome, guest", "account.guestText": "You are browsing without a demo account.",
+  "account.lastOrder": "Last demo order", "account.ordersDemo": "Demo order history: orders you place at checkout appear here (this browser only).", "account.noOrders": "No orders yet.", "account.noOrdersText": "Place a demo order at checkout to see it here.",
+  "account.statusDemo": "Demo order", "account.viewOrder": "View order", "account.profileDemo": "Profile data is stored in this browser only.", "account.saved": "Saved",
+  "account.addressDemo": "Addresses are stored in this browser only.", "account.addAddress": "Add address", "account.noAddresses": "No saved addresses.", "account.noAddressesText": "Add an address to speed up checkout.",
+  "address.label": "Label", "address.line1": "Street address", "address.city": "City", "address.postalCode": "Postal code", "address.country": "Country",
+
+  // admin
+  "admin.eyebrow": "Admin-ready (demo)", "admin.overview": "Overview", "admin.products": "Products", "admin.categories": "Categories", "admin.collections": "Collections", "admin.orders": "Orders", "admin.settings": "Store settings",
+  "admin.demoTitle": "Interface only.", "admin.demoText": "There is no authentication or authorisation here. Before connecting real data, protect these routes and every API they call on the server — hiding a link is not security.",
+  "admin.demoOrders": "Demo orders", "admin.attention": "Needs attention", "admin.name": "Name", "admin.price": "Price", "admin.stock": "Stock", "admin.status": "Status", "admin.active": "Active", "admin.draft": "Draft", "admin.new": "New",
+  "admin.localOnly": "Changes are kept in this session only and are not saved.", "admin.ordersNote": "Statuses are local UI state only.", "admin.customer": "Customer", "admin.date": "Date", "admin.total": "Total",
+  "admin.st.pending": "Pending", "admin.st.paid": "Paid", "admin.st.shipped": "Shipped", "admin.st.delivered": "Delivered",
+  "admin.storeName": "Store name", "admin.currency": "Currency", "admin.freeOver": "Free shipping over", "admin.returnsDays": "Return window (days)", "admin.settingsNote": "Real settings are read from", "admin.preview": "Preview",
+
+  // content pages
+  "about.eyebrow": "About", "about.title": "A store, designed like a place.", "about.lead": "VANTA is a concept store: one calm, cinematic home for very different things.",
+  "about.p1": "We built VANTA to show how a multi-category store can feel curated instead of crowded — one visual language across fashion, sound, home and beauty.",
+  "about.p2": "Everything here is a demo: the brand, products, photography, prices and reviews are samples you can replace through configuration.",
+  "about.v1": "Considered", "about.v1t": "Every surface is designed, from the logo to the empty cart.", "about.v2": "Adaptive", "about.v2t": "Categories, brand and policies are configuration, not code.", "about.v3": "Accessible", "about.v3t": "Keyboard-friendly, motion-aware, in Arabic and English.",
+  "about.demo": "No real company information, certifications or statistics are claimed.",
+  "contact.eyebrow": "Contact", "contact.title": "Say hello.", "contact.sub": "Questions about the demo store or how to adapt it?", "contact.send": "Send message",
+  "contact.demoNote": "Demo mode: your message is validated but not delivered or stored.", "contact.demoDone": "Message validated. This is a demo: it was not sent or saved.",
+  "policy.eyebrow": "Policies", "policy.shipping": "Shipping policy", "policy.returns": "Returns policy", "policy.privacy": "Privacy policy", "policy.terms": "Terms of service", "policy.demo": "Sample policy text for the demo store. Replace it with your own before launch.",
+  "policy.shipping.p1": "Standard delivery costs {standard} and takes {sEta} days. Orders over {freeOver} ship free on standard delivery.",
+  "policy.shipping.p2": "Express delivery costs {express} and takes {xEta} days. Store pickup is free.",
+  "policy.shipping.p3": "Delivery estimates start when an order is dispatched. In this demo, no parcels are actually shipped.",
+  "policy.shipping.p4": "Shipping costs and thresholds are read from the store configuration, so this page always matches checkout.",
+  "policy.returns.p1": "You can return unused items within {days} days of delivery.",
+  "policy.returns.p2": "Items must be in original condition and packaging. Sale items follow the same window in this demo policy.",
+  "policy.returns.p3": "Refunds would be issued to the original payment method once a return is received. In this demo, no refunds are processed.",
+  "policy.returns.p4": "Contact support through the contact page to start a return.",
+  "policy.privacy.p1": "This demo store keeps your cart, wishlist and recently viewed items in your browser’s local storage. They are not sent to any server.",
+  "policy.privacy.p2": "Forms in the demo validate your input but do not store or transmit it.",
+  "policy.privacy.p3": "No analytics or advertising cookies are used by this demo.",
+  "policy.privacy.p4": "Replace this text with your real privacy policy when you connect a backend.",
+  "policy.terms.p1": "This is a demonstration website. Products, prices, availability and reviews are samples.",
+  "policy.terms.p2": "No contract of sale is formed, no payment is taken and no goods are shipped.",
+  "policy.terms.p3": "Photography is sample imagery used for demonstration.",
+  "policy.terms.p4": "Replace these terms with your own legal text before going live.",
+
+  // errors
+  "404.title": "This page wandered off.", "404.text": "The page you’re looking for doesn’t exist or has moved.", "404.home": "Back home",
+  "error.title": "Something went wrong.", "error.generic": "We couldn’t complete that. Please try again.", "error.network": "Network problem — check your connection and try again.", "error.catalog": "The catalog couldn’t be loaded.",
+} as const;
