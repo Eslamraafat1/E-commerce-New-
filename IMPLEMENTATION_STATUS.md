@@ -15,7 +15,7 @@ Stack: Next.js 16.4.3 (Cache Components, Turbopack), React 19.3, Tailwind v4, GS
 - J Docs — `docs/BACKEND_INTEGRATION.md`, `.env.example`.
 
 ## Verified
-`tsc` clean, `next build` OK (248 static/partial pages), eslint 0 errors. Playwright: catalog filters/sort/search/load-more, quick view (focus, Escape, scroll lock), variant→image/SKU, 3 distinct cart lines, discount code, checkout validation + demo order, Ctrl+K, theme persistence, language switch/cookie. Sweep of 40 routes × 2 locales × 320/768/1280px: no horizontal overflow, no JS errors, 404 handled.
+`tsc` clean, `next build` OK (248 static/partial pages), eslint 0 errors. Playwright: catalog filters/sort/search/load-more, quick view (focus, Escape, scroll lock), variant→image/SKU, 3 distinct cart lines, discount code, checkout validation + demo order, Ctrl+K, theme persistence, language switch/cookie. Sweep of 40 routes × 2 locales × 320/360/390/430/768/1024/1280/1440/1920px: no horizontal overflow, no JS errors, 404 handled.
 
 ## Known limitations
 - All data, reviews, ratings are sample. Some stock photos show third-party marks.

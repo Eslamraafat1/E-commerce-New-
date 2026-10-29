@@ -51,7 +51,7 @@ function useData<T>(load: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null);
   const [err, setErr] = useState(false);
   const [n, setN] = useState(0);
-  useEffect(() => { load().then(setData).catch(() => setErr(true)); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [n]);
+  useEffect(() => { load().then(setData).catch(() => setErr(true)); }, [n]);
   return { data, setData, err, retry: () => { setErr(false); setN((x) => x + 1); } };
 }
 

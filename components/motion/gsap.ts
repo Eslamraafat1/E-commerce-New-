@@ -35,6 +35,5 @@ export function useGsapScope(
       setup({ gsap, ScrollTrigger, mm });
     }, scope);
     return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

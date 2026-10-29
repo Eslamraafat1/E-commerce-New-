@@ -41,7 +41,7 @@ export function SectionNav({ sections }: { sections: { id: string; label: string
       <ul className="flex flex-col items-end gap-3">
         {sections.map((s) => (
           <li key={s.id}>
-            <a href={`#${s.id}`} onClick={(e) => { e.preventDefault(); const el = document.querySelector(`[data-section="${s.id}"]`); if (el) (window.__lenis ? (window.__lenis as unknown as { scrollTo: (e: Element) => void }).scrollTo(el) : el.scrollIntoView({ behavior: "smooth" })); }} aria-current={active === s.id ? "true" : undefined} className="group flex items-center gap-3 py-0.5" aria-label={s.label}>
+            <a href={`#${s.id}`} onClick={(e) => { e.preventDefault(); const el = document.querySelector(`[data-section="${s.id}"]`); if (el) { if (window.__lenis) (window.__lenis as unknown as { scrollTo: (e: Element) => void }).scrollTo(el); else el.scrollIntoView({ behavior: "smooth" }); }; }} aria-current={active === s.id ? "true" : undefined} className="group flex items-center gap-3 py-0.5" aria-label={s.label}>
               <span className={`text-xs transition ${active === s.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"} rounded bg-surface-2 px-2 py-0.5`}>{s.label}</span>
               <span className={`block h-1.5 rounded-full transition-all ${active === s.id ? "w-6 bg-accent" : "w-1.5 bg-fg/30 group-hover:bg-fg"}`} />
             </a>

@@ -82,7 +82,7 @@ export function Header({ categories, collections }: { categories: Category[]; co
         </nav>
 
         <div className="ms-auto flex items-center gap-1.5">
-          <button className="btn-icon !w-auto gap-2 whitespace-nowrap px-3 max-sm:!w-11 max-sm:px-0 sm:min-w-44 sm:justify-between" onClick={() => setPaletteOpen(true)} aria-label={t("search.open")}>
+          <button className="btn-icon !w-auto gap-2 whitespace-nowrap px-3 max-sm:!w-11 max-sm:px-0 xl:min-w-44 xl:justify-between" onClick={() => setPaletteOpen(true)} aria-label={t("search.open")}>
             <span className="flex items-center gap-2 text-sm text-muted"><Search size={18} className="text-fg" /><span className="hidden sm:inline">{t("search.placeholderShort")}</span></span>
             <kbd className="hidden rounded border border-line px-1.5 text-[0.65rem] text-muted xl:inline">Ctrl K</kbd>
           </button>

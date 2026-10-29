@@ -10,7 +10,7 @@ export function CartPage() {
   const { lines, subtotal, count } = useCartTotals();
   if (!lines.length) return <EmptyState icon={<ShoppingBag size={30} />} title={t("cart.emptyTitle")} text={t("cart.emptyText")} />;
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_24rem] xl:grid-cols-[1fr_28rem]">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] xl:grid-cols-[minmax(0,1fr)_28rem]">
       <section aria-label={t("nav.cart")}>
         <p className="mb-2 text-sm text-muted">{t("cart.items", { n: num(count) })}</p>
         <CartLines />

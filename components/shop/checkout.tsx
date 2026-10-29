@@ -126,7 +126,7 @@ export function Checkout() {
   ];
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_26rem] xl:gap-16">
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_26rem] xl:gap-16">
       <div>
         <DemoNotice>{t("checkout.demoBanner")}</DemoNotice>
         <ol className="my-8 flex items-center gap-2 overflow-x-auto no-scrollbar" aria-label={t("checkout.steps")}>
