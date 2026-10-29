@@ -17,6 +17,12 @@ Stack: Next.js 16.4.3 (Cache Components, Turbopack), React 19.3, Tailwind v4, GS
 ## Verified
 `tsc` clean, `next build` OK (248 static/partial pages), eslint 0 errors. Playwright: catalog filters/sort/search/load-more, quick view (focus, Escape, scroll lock), variant→image/SKU, 3 distinct cart lines, discount code, checkout validation + demo order, Ctrl+K, theme persistence, language switch/cookie. Sweep of 40 routes × 2 locales × 320/360/390/430/768/1024/1280/1440/1920px: no horizontal overflow, no JS errors, 404 handled.
 
+## Creative layer
+Hero carousel (GSAP), expanding image panels, scroll-linked marquees, cursor bubble, route curtain, immersive shop header, editorial product page with colour wash. Animations are ON by default; the header zap button switches them off (stored locally).
+
+## Final test run
+tsc clean, eslint 0 errors (3 warnings), build OK (248 pages), e2e flows pass, 40 routes x 2 locales x 9 widths: no overflow / JS errors.
+
 ## Known limitations
 - All data, reviews, ratings are sample. Some stock photos show third-party marks.
 - Auth, orders, payments, email: demo only; nothing persisted server-side.
