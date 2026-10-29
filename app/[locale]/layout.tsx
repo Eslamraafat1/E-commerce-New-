@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 };
 
 /** Runs before first paint so the correct theme is applied with no flash. */
-const themeScript = `(function(){try{var t=localStorage.getItem('vanta-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.dataset.theme=t;d.style.colorScheme=t;var m=localStorage.getItem('vanta-motion');if(m==='full'||m==='reduced'){d.dataset.motion=m;var o=window.matchMedia.bind(window);window.matchMedia=function(q){var r=o(q);if(/prefers-reduced-motion/.test(q)){var want=/reduce/.test(q)?(m==='reduced'):(m==='full');var f=Object.create(r);Object.defineProperty(f,'matches',{value:want});f.addEventListener=function(){};f.removeEventListener=function(){};f.addListener=function(){};f.removeListener=function(){};return f}return r}}}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem('vanta-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.dataset.theme=t;d.style.colorScheme=t;var m=localStorage.getItem('vanta-motion');if(m!=='reduced')m='full';{d.dataset.motion=m;var o=window.matchMedia.bind(window);window.matchMedia=function(q){var r=o(q);if(/prefers-reduced-motion/.test(q)){var want=/reduce/.test(q)?(m==='reduced'):(m==='full');var f=Object.create(r);Object.defineProperty(f,'matches',{value:want});f.addEventListener=function(){};f.removeEventListener=function(){};f.addListener=function(){};f.removeListener=function(){};return f}return r}}}catch(e){}})();`;
 
 export default async function RootLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;

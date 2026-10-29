@@ -42,13 +42,12 @@ export function LanguageSwitcher({ compact }: { compact?: boolean }) {
   );
 }
 
-/** Lets people override the OS reduced-motion setting for this site (stored locally; applies on reload). */
+/** Animations are ON by default for this site; visitors can switch them off here (stored locally, applies on reload). */
 export function MotionToggle() {
   const { t } = useI18n();
   const toggle = () => {
     const root = document.documentElement;
-    const osReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const on = root.dataset.motion ? root.dataset.motion === "full" : !osReduced;
+    const on = root.dataset.motion !== "reduced";
     try { localStorage.setItem("vanta-motion", on ? "reduced" : "full"); } catch { /* ignore */ }
     location.reload();
   };
