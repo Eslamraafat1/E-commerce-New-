@@ -13,6 +13,8 @@ export const ar: Dict = {
   "shop.promoText": "التوصيل العادي مجاني للطلبات فوق {amount}.",
   "shop.promoCta": "ابدأ بالرمز",
   "cursor.zoom": "تكبير",
+  "a11y.toggleMotion": "تشغيل / إيقاف الحركات",
+  "jr.hover": "اقرأ",
   "meta.description": "فانتا متجر تجريبي متعدد الفئات بتجربة تسوق سينمائية مبنية بـ Next.js.",
 
   "common.all": "الكل", "common.back": "رجوع", "common.cancel": "إلغاء", "common.close": "إغلاق", "common.continue": "متابعة",

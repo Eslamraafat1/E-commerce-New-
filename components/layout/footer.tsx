@@ -17,7 +17,7 @@ export function Footer({ categories }: { categories: Category[] }) {
           social={store.social.map((s) => ({ ...s }))}
         />
       </div>
-      <p aria-hidden className="display pointer-events-none select-none overflow-hidden whitespace-nowrap text-center text-[22vw] leading-[0.8] text-fg/[0.04] rtl:hidden">{store.name}</p>
+      <p aria-hidden dir="ltr" className="display flex select-none justify-center overflow-hidden pt-4 text-[24vw] leading-[0.85] text-fg/[0.07]">{store.name.split("").map((ch, i) => <span key={i} className="inline-block cursor-default transition-all duration-500 ease-[var(--ease)] hover:-translate-y-[6%] hover:text-accent hover:[text-shadow:0_0_60px_var(--accent)]">{ch}</span>)}</p>
     </footer>
   );
 }

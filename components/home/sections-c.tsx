@@ -13,6 +13,7 @@ import { SmartImage } from "@/components/ui/smart-image";
 import { store } from "@/config/store";
 import type { Article, Category, Collection, Lifestyle, Product } from "@/lib/api/types";
 import { ImageAccordion } from "./accordion";
+import { JournalList } from "./journal-list";
 import { SectionHead } from "./section-bits";
 
 /* ─────────── 13. Product discovery + floating gallery (experience #3) ─────────── */
@@ -173,30 +174,12 @@ export function Benefits() {
 
 /* ─────────── 18. Journal ─────────── */
 export function JournalSection({ articles }: { articles: Article[] }) {
-  const { t, l, date } = useI18n();
-  const [a, ...rest] = articles;
+  const { t } = useI18n();
   return (
     <section data-section="journal" aria-labelledby="jr-title" className="section">
       <div className="container-x">
         <SectionHead id="jr-title" eyebrow={t("jr.eyebrow")} title={t("jr.title")} link={{ href: "/journal", label: t("common.viewAll") }} />
-        <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
-          <LocLink href={`/journal/${a.slug}`} className="group block">
-            <div className="img-wrap relative aspect-[16/10] rounded-[var(--radius)]"><SmartImage src={a.image} alt="" fill sizes="(max-width:1024px) 100vw, 55vw" className="object-cover transition-transform duration-1000 group-hover:scale-105" /></div>
-            <p className="eyebrow mt-5">{l(a.category)} · {date(a.date)} · {t("jr.read", { n: a.readMinutes })}</p>
-            <h3 className="display mt-3 text-[clamp(1.6rem,3vw,2.8rem)] group-hover:underline underline-offset-8">{l(a.title)}</h3>
-            <p className="mt-3 max-w-xl text-muted">{l(a.excerpt)}</p>
-          </LocLink>
-          <ul className="flex flex-col gap-6">
-            {rest.slice(0, 3).map((x) => (
-              <li key={x.slug}>
-                <LocLink href={`/journal/${x.slug}`} className="group grid grid-cols-[7rem_1fr] items-center gap-4 border-t border-line pt-6">
-                  <span className="img-wrap relative block aspect-square rounded-2xl"><SmartImage src={x.image} alt="" fill sizes="112px" className="object-cover transition-transform duration-700 group-hover:scale-110" /></span>
-                  <span><span className="eyebrow">{l(x.category)}</span><span className="mt-1 block text-lg font-medium leading-snug group-hover:underline">{l(x.title)}</span></span>
-                </LocLink>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <JournalList articles={articles.slice(0, 5)} />
         <p className="mt-8 text-xs text-muted">{t("jr.demo")}</p>
       </div>
     </section>

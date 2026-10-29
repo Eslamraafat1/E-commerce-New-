@@ -212,10 +212,12 @@ img { max-width: 100%; }
 @keyframes scroll-cue { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-  .marquee-track { animation: none !important; }
-  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  :root:not([data-motion="full"]) *, :root:not([data-motion="full"]) *::before, :root:not([data-motion="full"]) *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  :root:not([data-motion="full"]) .marquee-track { animation: none !important; }
+  :root:not([data-motion="full"]) ::view-transition-group(*), :root:not([data-motion="full"]) ::view-transition-old(*), :root:not([data-motion="full"]) ::view-transition-new(*) { animation: none !important; }
 }
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+:root[data-motion="reduced"] .marquee-track { animation: none !important; }
 
 /* Dark/light cross-fade for the toggle icons (no hydration mismatch) */
 .theme-sun { display: none; }
@@ -223,3 +225,11 @@ img { max-width: 100%; }
 :root[data-theme="dark"] .theme-moon { display: none; }
 
 @media print { body::before { display: none; } }
+
+/* Motion switch icon: shows the current state */
+.motion-off { display: none; }
+@media (prefers-reduced-motion: reduce) { :root:not([data-motion="full"]) .motion-on { display: none; } :root:not([data-motion="full"]) .motion-off { display: block; } }
+:root[data-motion="reduced"] .motion-on { display: none; }
+:root[data-motion="reduced"] .motion-off { display: block; }
+:root[data-motion="full"] .motion-on { display: block; }
+:root[data-motion="full"] .motion-off { display: none; }

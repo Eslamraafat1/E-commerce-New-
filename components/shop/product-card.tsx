@@ -56,6 +56,8 @@ export function ProductCard({ product: p, variant = "classic", priority = false,
     if (e.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = cardRef.current!, r = el.getBoundingClientRect();
     el.style.setProperty("--ry", `${((e.clientX - r.left) / r.width - 0.5) * 6}deg`);
+    el.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--gy", `${((e.clientY - r.top) / r.height) * 100}%`);
     el.style.setProperty("--rx", `${(0.5 - (e.clientY - r.top) / r.height) * 6}deg`);
   };
   const onLeave = () => { cardRef.current?.style.setProperty("--rx", "0deg"); cardRef.current?.style.setProperty("--ry", "0deg"); };
@@ -79,6 +81,7 @@ export function ProductCard({ product: p, variant = "classic", priority = false,
             </span>
           </ViewTransition>
         </LocLink>
+        <span aria-hidden className="pointer-events-none absolute inset-0 z-[1] opacity-0 mix-blend-soft-light transition-opacity duration-300 [@media(hover:hover)]:group-hover/card:opacity-100" style={{ background: "radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.75), transparent 55%)" }} />
         <div className="pointer-events-none absolute inset-x-3 top-3 z-[2] flex items-start justify-between">
           <Badge p={p} />
           <span className="pointer-events-auto"><WishlistButton product={p} /></span>

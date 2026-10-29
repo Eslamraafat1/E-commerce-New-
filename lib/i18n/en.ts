@@ -11,6 +11,8 @@ export const en = {
   "shop.promoText": "Standard delivery is free on orders over {amount}.",
   "shop.promoCta": "Start with the code",
   "cursor.zoom": "Zoom",
+  "a11y.toggleMotion": "Toggle animations on / off",
+  "jr.hover": "Read",
   "meta.description": "VANTA is a demo concept store: a cinematic, multi-category shopping experience built with Next.js.",
 
   // common

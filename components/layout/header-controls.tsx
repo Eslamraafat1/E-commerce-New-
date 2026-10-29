@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Zap, ZapOff } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n";
 import { localeMeta, locales, type Locale } from "@/config/store";
@@ -38,6 +38,23 @@ export function LanguageSwitcher({ compact }: { compact?: boolean }) {
   return (
     <button onClick={() => go(other)} className={compact ? "btn btn-ghost btn-sm" : "btn-icon !w-auto px-3 text-sm font-semibold"} aria-label={t("a11y.switchLanguage", { lang: localeMeta[other].label })} lang={other}>
       {localeMeta[other].label}
+    </button>
+  );
+}
+
+/** Lets people override the OS reduced-motion setting for this site (stored locally; applies on reload). */
+export function MotionToggle() {
+  const { t } = useI18n();
+  const toggle = () => {
+    const root = document.documentElement;
+    const osReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const on = root.dataset.motion ? root.dataset.motion === "full" : !osReduced;
+    try { localStorage.setItem("vanta-motion", on ? "reduced" : "full"); } catch { /* ignore */ }
+    location.reload();
+  };
+  return (
+    <button onClick={toggle} className="btn-icon" aria-label={t("a11y.toggleMotion")} title={t("a11y.toggleMotion")}>
+      <Zap size={18} className="motion-on" /><ZapOff size={18} className="motion-off" />
     </button>
   );
 }

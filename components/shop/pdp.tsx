@@ -172,7 +172,13 @@ export function ProductExperience({ product: p }: { product: Product }) {
     return () => io.disconnect();
   }, []);
 
-  const pick = (c: string) => { sel.setColor(c); const i = p.images.findIndex((im) => im.color === c); if (i >= 0) setIndex(i); };
+  const pointer = useRef({ x: 0, y: 0 });
+  useEffect(() => { const f = (e: PointerEvent) => { pointer.current = { x: e.clientX, y: e.clientY }; }; window.addEventListener("pointerdown", f, true); return () => window.removeEventListener("pointerdown", f, true); }, []);
+  const [wash, setWash] = useState<{ k: number; hex: string; x: number; y: number } | null>(null);
+  const pick = (c: string) => {
+    const hex = p.colors?.find((x) => x.id === c)?.hex;
+    if (hex && c !== sel.color && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setWash({ k: Date.now(), hex, ...pointer.current }); setTimeout(() => setWash(null), 1100); }
+    sel.setColor(c); const i = p.images.findIndex((im) => im.color === c); if (i >= 0) setIndex(i); };
   const sold = p.stockStatus === "out_of_stock";
   const max = sel.variant ? Math.min(sel.variant.stock, 10) : 10;
   const cta = sold ? t("product.soldOut") : sel.needsChoice ? t("product.selectSize") : !sel.variant ? t("product.unavailable") : !sel.canAdd ? t("product.soldOut") : t("product.addToCart");
@@ -189,6 +195,11 @@ export function ProductExperience({ product: p }: { product: Product }) {
 
   return (
     <div className="relative overflow-x-clip">
+      <AnimatePresence>
+        {wash && (
+          <motion.div key={wash.k} aria-hidden className="pointer-events-none fixed inset-0 z-[58]" style={{ background: wash.hex, opacity: 0.55 }} initial={{ clipPath: `circle(0px at ${wash.x}px ${wash.y}px)`, opacity: 0.7 }} animate={{ clipPath: `circle(150vmax at ${wash.x}px ${wash.y}px)` }} exit={{ opacity: 0 }} transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }} />
+        )}
+      </AnimatePresence>
       {/* ambient colour wash that follows the selected colour */}
       <div aria-hidden className="pointer-events-none absolute -inset-x-[10%] -top-40 -z-10 h-[70vh] opacity-30 blur-3xl transition-[background] duration-1000" style={{ background: `radial-gradient(50% 60% at 70% 30%, ${tint}, transparent 70%)` }} />
 

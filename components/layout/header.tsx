@@ -10,7 +10,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { SmartImage } from "@/components/ui/smart-image";
 import type { Category, Collection } from "@/lib/api/types";
 import { cartStore, wishlistStore } from "@/lib/stores";
-import { LanguageSwitcher, ThemeToggle } from "./header-controls";
+import { LanguageSwitcher, MotionToggle, ThemeToggle } from "./header-controls";
 import { Logo } from "./logo";
 
 export function Header({ categories, collections }: { categories: Category[]; collections: Collection[] }) {
@@ -89,6 +89,7 @@ export function Header({ categories, collections }: { categories: Category[]; co
           <div className="hidden items-center gap-1.5 md:flex">
             <LanguageSwitcher />
             <ThemeToggle />
+            <MotionToggle />
           </div>
           <LocLink href="/account" className="btn-icon hidden sm:inline-flex" aria-label={t("nav.account")}><User size={18} className="m-auto" /></LocLink>
           <LocLink href="/wishlist" className="btn-icon relative hidden sm:inline-flex" aria-label={`${t("nav.wishlist")} (${wishCount})`}>
@@ -175,6 +176,7 @@ export function Header({ categories, collections }: { categories: Category[]; co
           </div>
           <div className="mt-auto flex items-center justify-between pt-8">
             <LanguageSwitcher compact />
+            <MotionToggle />
             <ThemeToggle />
           </div>
         </div>
