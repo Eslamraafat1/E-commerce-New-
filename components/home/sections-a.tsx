@@ -1,75 +1,52 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { DESKTOP, useGsapScope } from "@/components/motion/gsap";
 import { ImageReveal, Magnetic, Marquee } from "@/components/motion/primitives";
+import { ScrollText, SpinBadge } from "@/components/motion/creative";
 import { LocLink, useI18n } from "@/components/providers/i18n";
 import { Price } from "@/components/shop/variant";
 import { ProductCard } from "@/components/shop/product-card";
 import { SmartImage } from "@/components/ui/smart-image";
 import type { Category, Product } from "@/lib/api/types";
+import { ImageAccordion } from "./accordion";
 import { SectionHead } from "./section-bits";
 
-/* ─────────── 4. Brand marquee ─────────── */
+/* ─────────── 4. Brand marquee — skews with scroll velocity ─────────── */
 export function BrandMarquee() {
   const { t } = useI18n();
+  const root = useRef<HTMLElement>(null);
   const words = [t("marquee.1"), t("marquee.2"), t("marquee.3"), t("marquee.4"), t("marquee.5"), t("marquee.6")];
+  useGsapScope(root, ({ gsap, ScrollTrigger, mm }) => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const skew = gsap.quickTo("[data-skew]", "skewX", { duration: 0.5, ease: "power3.out" });
+      const st = ScrollTrigger.create({ onUpdate: (self) => { skew(Math.max(-12, Math.min(12, self.getVelocity() / -120))); } });
+      return () => st.kill();
+    });
+  });
   return (
-    <section id="after-hero" data-section="marquee" aria-label={t("marquee.label")} className="border-y border-line bg-bg2/50 py-5">
-      <Marquee speed={46} items={words.map((w, i) => (
-        <span key={i} className="flex items-center gap-8 pe-8">
-          <span className={`display text-[clamp(1.6rem,3.6vw,3rem)] ${i % 2 ? "stroke-text" : ""}`}>{w}</span>
-          <span aria-hidden className="size-2.5 rounded-full bg-accent" />
-        </span>
-      ))} />
+    <section ref={root} id="after-hero" data-section="marquee" aria-label={t("marquee.label")} className="overflow-hidden border-y border-line bg-fg py-5 text-bg">
+      <div data-skew>
+        <Marquee speed={42} items={words.map((w, i) => (
+          <span key={i} className="flex items-center gap-8 pe-8">
+            <span className={`display text-[clamp(1.8rem,4vw,3.4rem)] ${i % 2 ? "[-webkit-text-stroke:1.5px_var(--bg)] text-transparent" : ""}`}>{w}</span>
+            <span aria-hidden className="grid size-8 place-items-center rounded-full bg-accent text-on-accent">✦</span>
+          </span>
+        ))} />
+      </div>
     </section>
   );
 }
 
-/* ─────────── 5. Interactive category universe ─────────── */
+/* ─────────── 5. Category universe — expanding image panels ─────────── */
 export function CategoryUniverse({ categories, counts }: { categories: Category[]; counts: Record<string, number> }) {
-  const { t, l, num } = useI18n();
-  const [i, setI] = useState(0);
-  const c = categories[i];
+  const { t, l } = useI18n();
   return (
     <section data-section="categories" aria-labelledby="cat-title" className="section">
       <div className="container-x">
         <SectionHead id="cat-title" eyebrow={t("cat.eyebrow")} title={t("cat.title")} link={{ href: "/categories", label: t("cat.all") }}>{t("cat.sub")}</SectionHead>
-        <div className="grid items-stretch gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
-          <ul className="flex min-w-0 gap-2 overflow-x-auto no-scrollbar max-lg:-mx-[var(--gutter)] max-lg:px-[var(--gutter)] lg:flex-col lg:gap-0 lg:overflow-visible" role="tablist" aria-orientation="vertical" aria-label={t("nav.categories")}>
-            {categories.map((x, k) => (
-              <li key={x.id} className="shrink-0 lg:border-t lg:border-line lg:last:border-b">
-                <button
-                  role="tab" aria-selected={k === i} id={`cu-${x.id}`} aria-controls="cu-panel"
-                  onMouseEnter={() => matchMedia("(hover:hover)").matches && setI(k)} onFocus={() => setI(k)} onClick={() => setI(k)}
-                  className={`group flex w-full items-center justify-between gap-6 rounded-full border px-5 py-2.5 text-start transition max-lg:border-line lg:rounded-none lg:border-0 lg:px-0 lg:py-4 ${k === i ? "max-lg:bg-fg max-lg:text-bg" : "text-fg/60 hover:text-fg"}`}
-                >
-                  <span className="flex items-baseline gap-4">
-                    <span className="eyebrow hidden tabular lg:inline">{String(k + 1).padStart(2, "0")}</span>
-                    <span className={`display whitespace-nowrap text-xl transition-all duration-500 lg:text-[clamp(2rem,4.4vw,4.2rem)] ${k === i ? "lg:translate-x-3 rtl:lg:-translate-x-3 lg:text-fg" : ""}`}>{l(x.name)}</span>
-                  </span>
-                  <span className="hidden items-center gap-3 lg:flex"><span className="eyebrow tabular">{num(counts[x.id] ?? 0)}</span><ArrowUpRight size={22} className={`transition ${k === i ? "opacity-100" : "opacity-0"} rtl:-scale-x-100`} /></span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div id="cu-panel" role="tabpanel" aria-labelledby={`cu-${c.id}`} className="relative min-w-0">
-            <LocLink href={`/categories/${c.slug}`} className="group relative block aspect-[4/3.4] overflow-hidden rounded-[var(--radius)] sm:aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px]" aria-label={l(c.name)}>
-              <AnimatePresence mode="popLayout">
-                <motion.div key={c.id} className="absolute inset-0" initial={{ clipPath: "inset(0 0 100% 0)", scale: 1.15 }} animate={{ clipPath: "inset(0 0 0% 0)", scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}>
-                  <SmartImage src={c.image} alt="" fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
-                </motion.div>
-              </AnimatePresence>
-              <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-              <span className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-4 text-white">
-                <span className="max-w-xs text-sm text-white/85">{l(c.blurb)}</span>
-                <span className="grid size-14 shrink-0 place-items-center rounded-full" style={{ background: c.accent, color: "#0e0e10" }}><ArrowUpRight size={22} className="rtl:-scale-x-100" /></span>
-              </span>
-            </LocLink>
-          </div>
-        </div>
+        <ImageAccordion label={t("nav.categories")} items={categories.map((c) => ({ id: c.id, href: `/categories/${c.slug}`, name: l(c.name), blurb: l(c.blurb), image: c.image, accent: c.accent, meta: String(counts[c.id] ?? 0) }))} />
         <p className="mt-6 text-sm text-muted">{t("cat.configurable")}</p>
       </div>
     </section>
@@ -79,14 +56,25 @@ export function CategoryUniverse({ categories, counts }: { categories: Category[
 /* ─────────── 6. Featured product story ─────────── */
 export function FeaturedStory({ product: p }: { product: Product }) {
   const { t, l } = useI18n();
+  const root = useRef<HTMLElement>(null);
+  useGsapScope(root, ({ gsap, mm }) => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.to("[data-layer=word]", { xPercent: -18, ease: "none", scrollTrigger: { trigger: root.current!, start: "top bottom", end: "bottom top", scrub: 1 } });
+      gsap.to("[data-layer=badge]", { rotate: 160, y: -60, ease: "none", scrollTrigger: { trigger: root.current!, start: "top bottom", end: "bottom top", scrub: 1 } });
+      gsap.fromTo("[data-layer=small]", { yPercent: 25 }, { yPercent: -25, ease: "none", scrollTrigger: { trigger: root.current!, start: "top bottom", end: "bottom top", scrub: 1 } });
+    });
+  });
+  const second = p.images[1];
   return (
-    <section data-section="story" aria-labelledby="story-title" className="section overflow-hidden">
-      <div className="container-x grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
+    <section ref={root} data-section="story" aria-labelledby="story-title" className="section overflow-hidden">
+      <p data-layer="word" aria-hidden className="display pointer-events-none absolute inset-x-0 top-[8%] whitespace-nowrap text-[22vw] leading-none stroke-text opacity-[0.12] rtl:hidden">{l(p.title).split(" ")[0]}</p>
+      <div className="container-x relative grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
         <div className="relative lg:col-span-7">
           <ImageReveal parallax={-8} className="aspect-[4/4.6] rounded-[var(--radius)] sm:aspect-[5/5]">
             <SmartImage src={p.images[0].src} alt={l(p.images[0].alt)} fill sizes="(max-width:1024px) 100vw, 58vw" className="object-cover" />
           </ImageReveal>
-          <p aria-hidden className="display pointer-events-none absolute -bottom-6 start-[-2%] select-none text-[clamp(5rem,18vw,16rem)] leading-none text-fg/[0.07] rtl:hidden">01</p>
+          {second && <div data-layer="small" className="img-wrap absolute -bottom-10 -end-4 hidden aspect-[3/4] w-[32%] rounded-2xl border-4 border-bg shadow-2xl sm:block"><SmartImage src={second.src} alt="" fill sizes="20vw" className="object-cover" /></div>}
+          <SpinBadge data-layer="badge" text={t("story.eyebrow")} className="absolute -start-4 -top-6 size-24 text-fg sm:size-32" />
         </div>
         <div className="lg:col-span-5 lg:ps-10">
           <p className="eyebrow mb-5 flex items-center gap-3"><span className="h-px w-8 bg-fg/40" />{t("story.eyebrow")}</p>
@@ -106,20 +94,31 @@ export function FeaturedStory({ product: p }: { product: Product }) {
   );
 }
 
-/* ─────────── 7. Trending ─────────── */
+/* ─────────── 7. Trending — staggered reveal ─────────── */
 export function Trending({ products }: { products: Product[] }) {
   const { t } = useI18n();
-  const [first, ...rest] = products;
+  const ref = useRef<HTMLDivElement>(null);
+  const lead = products.find((x) => x.slug === "court-low-sneaker") ?? products[0];
+  const [first, ...rest] = [lead, ...products.filter((x) => x !== lead)];
+  useGsapScope(ref, ({ gsap, ScrollTrigger, mm }) => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.set("[data-card]", { opacity: 0, y: 70 });
+      ScrollTrigger.batch("[data-card]", { start: "top 92%", once: true, onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, stagger: 0.09, duration: 1, ease: "expo.out" }) });
+    });
+  });
   return (
-    <section data-section="trending" aria-labelledby="trend-title" className="section">
-      <div className="container-x">
-        <SectionHead id="trend-title" eyebrow={t("trend.eyebrow")} title={t("trend.title")} link={{ href: "/shop?sort=best", label: t("common.viewAll") }} />
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4">
-          {first && <div className="col-span-2 lg:row-span-2"><ProductCard product={first} variant="classic" priority sizes="(max-width:1024px) 100vw, 50vw" /></div>}
-          {rest.slice(0, 6).map((p, i) => <ProductCard key={p.id} product={p} variant={i === 3 ? "tall" : "classic"} />)}
+    <>
+      <ScrollText text={t("trend.title")} />
+      <section data-section="trending" aria-labelledby="trend-title" className="section !pt-8">
+        <div className="container-x">
+          <SectionHead id="trend-title" eyebrow={t("trend.eyebrow")} title={t("trend.title")} link={{ href: "/shop?sort=best", label: t("common.viewAll") }} />
+          <div ref={ref} className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4">
+            {first && <div data-card className="col-span-2 lg:row-span-2"><ProductCard product={first} variant="classic" priority sizes="(max-width:1024px) 100vw, 50vw" /></div>}
+            {rest.slice(0, 6).map((p, i) => <div data-card key={p.id} className={i % 3 === 1 ? "lg:mt-10" : ""}><ProductCard product={p} variant={i === 3 ? "tall" : "classic"} /></div>)}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
@@ -135,12 +134,16 @@ export function HorizontalShowcase({ products }: { products: Product[] }) {
       const el = track.current!;
       const dist = () => el.scrollWidth - window.innerWidth + 120;
       const dir = isRtl ? 1 : -1;
-      gsap.to(el, {
+      const tween = gsap.to(el, {
         x: () => dir * dist(), ease: "none",
-        scrollTrigger: {
-          trigger: root.current, start: "top top", end: () => `+=${dist()}`, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
-          onUpdate: (self) => { if (bar.current) bar.current.style.transform = `scaleX(${self.progress})`; },
-        },
+        scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${dist()}`, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
+          onUpdate: (self) => { if (bar.current) bar.current.style.transform = `scaleX(${self.progress})`; } },
+      });
+      // per-card tilt + image drift, linked to the horizontal motion
+      gsap.utils.toArray<HTMLElement>("[data-sc]").forEach((c) => {
+        gsap.fromTo(c, { rotate: 5, yPercent: 8 }, { rotate: -5, yPercent: -8, ease: "none", scrollTrigger: { trigger: c, containerAnimation: tween, start: "left right", end: "right left", scrub: true } });
+        const im = c.querySelector("[data-sci]");
+        if (im) gsap.fromTo(im, { xPercent: -10 }, { xPercent: 10, ease: "none", scrollTrigger: { trigger: c, containerAnimation: tween, start: "left right", end: "right left", scrub: true } });
       });
     });
   });
@@ -150,17 +153,19 @@ export function HorizontalShowcase({ products }: { products: Product[] }) {
       <div className="container-x">
         <SectionHead id="show-title" eyebrow={t("show.eyebrow")} title={t("show.title")} link={{ href: "/shop?featured=1", label: t("common.viewAll") }} />
       </div>
-      <div className="max-lg:overflow-x-auto max-lg:snap-x max-lg:snap-mandatory max-lg:no-scrollbar">
-        <div ref={track} className="flex w-max gap-5 px-[var(--gutter)] lg:gap-8">
+      <div className="max-lg:snap-x max-lg:snap-mandatory max-lg:overflow-x-auto max-lg:no-scrollbar">
+        <div ref={track} className="flex w-max gap-5 px-[var(--gutter)] lg:gap-10">
           {products.map((p, i) => (
-            <LocLink key={p.id} href={`/products/${p.slug}`} className="group relative block w-[72vw] shrink-0 snap-center sm:w-[44vw] lg:w-[26vw] xl:w-[22vw]">
-              <div className="img-wrap aspect-[4/5] rounded-[var(--radius)]">
-                <SmartImage src={p.images[0].src} alt={l(p.images[0].alt)} fill sizes="(max-width:640px) 72vw, 26vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                <span className="absolute start-4 top-4 display text-5xl text-white/90 mix-blend-difference">{String(i + 1).padStart(2, "0")}</span>
-              </div>
-              <div className="mt-4 flex items-start justify-between gap-3">
-                <div><h3 className="font-medium">{l(p.title)}</h3><Price price={p.price} size="sm" /></div>
-                <span className="grid size-10 place-items-center rounded-full border border-line transition group-hover:bg-accent group-hover:text-on-accent"><ArrowUpRight size={16} className="rtl:-scale-x-100" /></span>
+            <LocLink key={p.id} href={`/products/${p.slug}`} data-cursor={t("cursor.view")} className="group relative block w-[72vw] shrink-0 snap-center sm:w-[44vw] lg:w-[24vw] xl:w-[21vw]">
+              <div data-sc>
+                <div className="img-wrap aspect-[4/5] rounded-[var(--radius)] shadow-xl">
+                  <div data-sci className="absolute -inset-x-[12%] inset-y-0"><SmartImage src={p.images[0].src} alt={l(p.images[0].alt)} fill sizes="(max-width:640px) 85vw, 30vw" className="object-cover transition-transform duration-700 group-hover:scale-105" /></div>
+                  <span className="display absolute start-4 top-3 text-6xl text-white mix-blend-difference">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <div className="mt-4 flex items-start justify-between gap-3">
+                  <div><h3 className="font-medium">{l(p.title)}</h3><Price price={p.price} size="sm" /></div>
+                  <span className="grid size-10 place-items-center rounded-full border border-line transition group-hover:bg-accent group-hover:text-on-accent"><ArrowUpRight size={16} className="rtl:-scale-x-100" /></span>
+                </div>
               </div>
             </LocLink>
           ))}
@@ -170,7 +175,7 @@ export function HorizontalShowcase({ products }: { products: Product[] }) {
         </div>
       </div>
       <div className="container-x mt-10 hidden lg:block" aria-hidden>
-        <div className="h-px w-full origin-left bg-line"><span ref={bar} className="block h-px origin-[var(--o,left)] scale-x-0 bg-fg rtl:[--o:right]" /></div>
+        <div className="h-px w-full bg-line"><span ref={bar} className="block h-px origin-[var(--o,left)] scale-x-0 bg-fg rtl:[--o:right]" /></div>
       </div>
     </section>
   );

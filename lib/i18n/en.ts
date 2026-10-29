@@ -1,5 +1,16 @@
 /** English dictionary — the master list of keys. ar.ts must provide every key. */
 export const en = {
+  "hero.carousel": "Featured products carousel",
+  "hero.slide": "Slide {n} of {total}",
+  "hero.discover": "Discover",
+  "cursor.view": "View",
+  "cat.items": "products",
+  "shop.pieces": "pieces",
+  "shop.browse": "Browse by category",
+  "shop.promoTitle": "Free shipping, made simple.",
+  "shop.promoText": "Standard delivery is free on orders over {amount}.",
+  "shop.promoCta": "Start with the code",
+  "cursor.zoom": "Zoom",
   "meta.description": "VANTA is a demo concept store: a cinematic, multi-category shopping experience built with Next.js.",
 
   // common

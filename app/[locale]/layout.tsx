@@ -10,6 +10,7 @@ import { UIProvider } from "@/components/providers/ui";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { CursorBubble } from "@/components/motion/creative";
 import { BackToTop, ScrollProgress } from "@/components/motion/primitives";
 import { getCategories } from "@/lib/api/categories";
 import { getCollections } from "@/lib/api/collections";
@@ -81,6 +82,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[lo
             <main id="main" tabIndex={-1} className="min-h-[70dvh] outline-none">{children}</main>
             <Footer categories={categories} />
             <BackToTop />
+            <CursorBubble />
           </UIProvider>
         </I18nProvider>
       </body>

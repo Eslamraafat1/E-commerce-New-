@@ -71,7 +71,7 @@ export function ProductCard({ product: p, variant = "classic", priority = false,
       className={`group/card relative ${variant === "wide" ? "flex gap-4 sm:gap-6" : "block"} [transform:perspective(900px)_rotateX(var(--rx,0))_rotateY(var(--ry,0))] transition-transform duration-300 ease-out`}
     >
       <div ref={imgRef} className={`img-wrap rounded-[var(--radius)] ${ratio} ${variant === "wide" ? "" : "w-full"}`}>
-        <LocLink href={href} className="absolute inset-0 z-[1]" aria-label={l(p.title)} tabIndex={-1}>
+        <LocLink href={href} data-cursor={t("cursor.view")} className="absolute inset-0 z-[1]" aria-label={l(p.title)} tabIndex={-1}>
           <ViewTransition name={`product-${p.id}`} share="morph" default="none">
             <span className="absolute inset-0">
               <SmartImage src={p.images[0].src} alt={l(p.images[0].alt)} fill priority={priority} sizes={sizes ?? "(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"} className={`object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover/card:scale-[1.06] ${sold ? "grayscale opacity-70" : ""}`} />
@@ -105,7 +105,7 @@ export function ProductCard({ product: p, variant = "classic", priority = false,
         <Price price={Math.min(...prices)} compareAt={from ? undefined : p.compareAtPrice} from={from} size="sm" className="mt-1" />
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
           <Rating p={p} />
-          {p.colors && <span className="text-xs text-muted">{t("product.colorsCount", { n: p.colors.length })}</span>}
+          {p.colors && <span className="flex items-center gap-1" title={t("product.colorsCount", { n: p.colors.length })}>{p.colors.slice(0, 4).map((c) => <span key={c.id} className="size-3.5 rounded-full border border-line" style={{ background: c.hex }} />)}</span>}
           {p.stockStatus === "low_stock" && <span className="text-xs font-medium text-accent2">{t("product.lowStock")}</span>}
         </div>
         {variant === "wide" && (

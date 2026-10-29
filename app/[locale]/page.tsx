@@ -5,6 +5,7 @@ import { getArticles, getLifestyles, getTestimonials } from "@/lib/api/content";
 import { getProduct, listProducts } from "@/lib/api/products";
 import { getDict, hasLocale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
+import { ScrollText } from "@/components/motion/creative";
 import { Hero } from "@/components/home/hero";
 import { BrandMarquee, CategoryUniverse, FeaturedStory, HorizontalShowcase, Trending } from "@/components/home/sections-a";
 import { BentoGrid, BestSellers, NewArrivals, ProductInFocus, TextureSpotlight } from "@/components/home/sections-b";
@@ -38,8 +39,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   ]);
 
   const counts = Object.fromEntries(all.facets.categories.map((c) => [c.id, c.count]));
-  const hero = featured.items.filter((p) => ["court-low-sneaker", "nimbus-noise-cancelling", "scarlet-lock-satchel"].includes(p.slug)).sort((a, b) => a.slug.localeCompare(b.slug));
-  const heroItems = hero.length >= 3 ? hero : featured.items.slice(0, 3);
+  const order = ["court-low-sneaker", "nimbus-noise-cancelling", "scarlet-lock-satchel", "verde-three-seat-sofa"];
+  const pool = [...featured.items, ...all.items];
+  const slides = order.map((slug) => pool.find((p) => p.slug === slug)).filter((p): p is NonNullable<typeof p> => !!p).map((product) => {
+    const c = categories.find((x) => x.id === product.categoryId);
+    return { product, accent: c?.accent ?? "#d4ff3a", category: c?.name[locale] ?? "" };
+  });
   const story = featured.items.find((p) => p.slug === "nimbus-noise-cancelling") ?? featured.items[0];
   const showcase = featured.items.filter((p) => p.id !== story.id).slice(0, 8);
   const bentoProduct = featured.items.find((p) => p.slug === "studio-pro-anc-headphones") ?? featured.items[1];
@@ -48,7 +53,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   return (
     <>
       <SectionNavClient />
-      <Hero products={heroItems} />
+      <Hero slides={slides} />
       <BrandMarquee />
       <CategoryUniverse categories={categories} counts={counts} />
       <FeaturedStory product={story} />
@@ -63,6 +68,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <Lifestyles items={lifestyles} />
       <Collections items={collections} />
       <BrandStory images={[img("styleA", 900), img("styleC", 900), img("styleB", 900), img("shop", 900)]} />
+      <ScrollText text={getDict(locale)["col.title"]} reverse />
       <Benefits />
       <JournalSection articles={articles} />
       <Testimonials items={testimonials} />

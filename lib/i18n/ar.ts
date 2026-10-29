@@ -2,6 +2,17 @@ import type { Dict } from "./index";
 
 /** Arabic (RTL) dictionary. Must provide every key defined in en.ts. */
 export const ar: Dict = {
+  "hero.carousel": "شريط المنتجات المميزة",
+  "hero.slide": "الشريحة {n} من {total}",
+  "hero.discover": "اكتشف",
+  "cursor.view": "عرض",
+  "cat.items": "منتج",
+  "shop.pieces": "قطعة",
+  "shop.browse": "تصفح حسب الفئة",
+  "shop.promoTitle": "شحن مجاني بكل بساطة.",
+  "shop.promoText": "التوصيل العادي مجاني للطلبات فوق {amount}.",
+  "shop.promoCta": "ابدأ بالرمز",
+  "cursor.zoom": "تكبير",
   "meta.description": "فانتا متجر تجريبي متعدد الفئات بتجربة تسوق سينمائية مبنية بـ Next.js.",
 
   "common.all": "الكل", "common.back": "رجوع", "common.cancel": "إلغاء", "common.close": "إغلاق", "common.continue": "متابعة",

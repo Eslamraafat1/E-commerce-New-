@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Catalog, CatalogSkeleton } from "@/components/shop/catalog";
-import { PageHeader } from "@/components/ui/page-header";
+import { ShopHeader } from "@/components/shop/shop-header";
 import { dictTitle, pageMeta, resolveLocale } from "@/lib/page";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/shop">) {
@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/shop">) 
 export default function ShopPage() {
   return (
     <>
-      <PageHeader eyebrow={{ key: "shop.eyebrow" }} title={{ key: "shop.title" }} sub={{ key: "shop.sub" }} crumbs={[{ label: { key: "nav.shop" } }]} />
-      <div className="container-x pb-24">
+      <ShopHeader eyebrow={{ key: "shop.eyebrow" }} title={{ key: "shop.title" }} sub={{ key: "shop.sub" }} base="/shop" scope={{}} />
+      <div className="container-x pb-24 pt-4">
         <Suspense fallback={<CatalogSkeleton />}><Catalog /></Suspense>
       </div>
     </>

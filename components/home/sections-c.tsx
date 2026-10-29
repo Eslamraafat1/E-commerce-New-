@@ -12,6 +12,7 @@ import { FaqList } from "@/components/ui/faq";
 import { SmartImage } from "@/components/ui/smart-image";
 import { store } from "@/config/store";
 import type { Article, Category, Collection, Lifestyle, Product } from "@/lib/api/types";
+import { ImageAccordion } from "./accordion";
 import { SectionHead } from "./section-bits";
 
 /* ─────────── 13. Product discovery + floating gallery (experience #3) ─────────── */
@@ -77,20 +78,7 @@ export function Lifestyles({ items }: { items: Lifestyle[] }) {
     <section data-section="lifestyle" aria-labelledby="life-title" className="section">
       <div className="container-x">
         <SectionHead id="life-title" eyebrow={t("life.eyebrow")} title={t("life.title")} />
-        <ul className="grid auto-rows-[minmax(280px,34vw)] grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-6 lg:auto-rows-[460px]">
-          {items.map((x, i) => (
-            <li key={x.id} className={`${i === 0 ? "col-span-2 lg:col-span-2" : ""} group relative overflow-hidden rounded-[var(--radius)] ${i % 2 ? "lg:mt-12" : ""}`}>
-              <LocLink href={`/shop?lifestyle=${x.id}`} className="absolute inset-0 block" aria-label={l(x.name)}>
-                <SmartImage src={x.image} alt="" fill sizes="(max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
-                <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                <span className="absolute inset-x-4 bottom-4 text-white">
-                  <span className="display block text-2xl sm:text-3xl">{l(x.name)}</span>
-                  <span className="mt-1 block text-sm text-white/80 transition-all duration-500 sm:max-h-0 sm:overflow-hidden sm:opacity-0 sm:group-hover:max-h-20 sm:group-hover:opacity-100">{l(x.blurb)}</span>
-                </span>
-              </LocLink>
-            </li>
-          ))}
-        </ul>
+        <ImageAccordion label={t("life.title")} items={items.map((x, i) => ({ id: x.id, href: `/shop?lifestyle=${x.id}`, name: l(x.name), blurb: l(x.blurb), image: x.image, accent: ["#d4ff3a", "#5bd1ff", "#3affb0", "#ffb23a", "#ff7fb0"][i % 5] }))} />
       </div>
     </section>
   );

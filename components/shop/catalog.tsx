@@ -2,12 +2,16 @@
 
 import { LayoutGrid, List, RotateCcw, Search, SlidersHorizontal, X } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "@/components/providers/i18n";
 import { Dialog } from "@/components/ui/dialog";
 import { getCategories } from "@/lib/api/categories";
 import { listProducts, parseQuery, queryParams } from "@/lib/api/products";
 import type { Category, ProductListResult, ProductQuery, SortKey } from "@/lib/api/types";
+import { useCardReveal } from "@/components/motion/creative";
+import { Marquee } from "@/components/motion/primitives";
+import { LocLink } from "@/components/providers/i18n";
+import { store } from "@/config/store";
 import { ProductCard } from "./product-card";
 
 const PAGE = 12;
@@ -48,6 +52,7 @@ export function Catalog({ base = {}, defaultSort, showSearch = true, hideCategor
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const view = sp.get("view") === "list" ? "list" : "grid";
   const resultsRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const user = useMemo(() => parseQuery(sp), [sp]);
   const baseKey = JSON.stringify(base);
@@ -65,6 +70,8 @@ export function Catalog({ base = {}, defaultSort, showSearch = true, hideCategor
     return () => ctrl.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qKey, attempt]);
+
+  useCardReveal(gridRef, data?.items.length);
 
   const update = useCallback((patch: Record<string, string | undefined>, resetPage = true) => {
     const next = new URLSearchParams(sp.toString());
@@ -226,8 +233,13 @@ export function Catalog({ base = {}, defaultSort, showSearch = true, hideCategor
             </div>
           ) : (
             <>
-              <div className={`${view === "list" ? "flex flex-col gap-8" : "grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-3 xl:grid-cols-4"} transition-opacity ${loading ? "opacity-60" : ""}`}>
-                {data.items.map((p, i) => <ProductCard key={p.id} product={p} variant={view === "list" ? "wide" : "classic"} priority={i < 4} />)}
+              <div ref={gridRef} className={`${view === "list" ? "flex flex-col gap-8" : "grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-3 xl:grid-cols-4"} transition-opacity ${loading ? "opacity-60" : ""}`}>
+                {data.items.map((p, i) => (
+                  <Fragment key={p.id}>
+                    <div data-card className={view === "grid" && i % 7 === 3 ? "lg:mt-10" : ""}><ProductCard product={p} variant={view === "list" ? "wide" : "classic"} priority={i < 4} /></div>
+                    {i === 7 && <PromoTile />}
+                  </Fragment>
+                ))}
               </div>
               <div className="mt-14 text-center">
                 <p className="mb-3 text-sm text-muted">{t("catalog.showing", { shown: num(data.items.length), total: num(data.total) })}</p>
@@ -289,3 +301,16 @@ function PriceInput({ label, value, placeholder, onCommit }: { label: string; va
 }
 
 export { queryParams };
+
+function PromoTile() {
+  const { t, price } = useI18n();
+  return (
+    <div data-card className="relative col-span-2 overflow-hidden rounded-[var(--radius)] bg-accent p-6 text-on-accent sm:p-10 lg:col-span-3 xl:col-span-4">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-2 opacity-15"><Marquee speed={50} items={Array.from({ length: 4 }, (_, i) => <span key={i} className="display pe-8 text-[8rem] leading-none">VANTA ✦</span>)} /></div>
+      <div className="relative flex flex-wrap items-end justify-between gap-6">
+        <div><p className="display text-[clamp(2rem,5vw,4rem)] !leading-[0.95]">{t("shop.promoTitle")}</p><p className="mt-3 max-w-md">{t("shop.promoText", { amount: price(store.policy.shipping.freeOver) })}</p></div>
+        <LocLink href="/cart" className="btn btn-dark">{t("shop.promoCta")} <code className="rounded bg-white/15 px-2 py-0.5 font-mono text-xs">VANTA10</code></LocLink>
+      </div>
+    </div>
+  );
+}

@@ -3,6 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Reveal } from "@/components/motion/primitives";
+import { SplitText } from "@/components/motion/creative";
 import { LocLink, useI18n } from "@/components/providers/i18n";
 
 export function SectionHead({ eyebrow, title, link, children, id }: { eyebrow: string; title: ReactNode; link?: { href: string; label: string }; children?: ReactNode; id?: string }) {
@@ -10,7 +11,7 @@ export function SectionHead({ eyebrow, title, link, children, id }: { eyebrow: s
     <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
       <div className="max-w-3xl">
         <p className="eyebrow mb-4 flex items-center gap-3"><span className="h-px w-8 bg-fg/40" />{eyebrow}</p>
-        <h2 id={id} className="display h-lg">{title}</h2>
+        {typeof title === "string" ? <SplitText id={id} text={title} className="display h-lg" /> : <h2 id={id} className="display h-lg">{title}</h2>}
         {children && <div className="lead mt-5">{children}</div>}
       </div>
       {link && (
