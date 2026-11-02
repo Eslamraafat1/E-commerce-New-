@@ -9,7 +9,7 @@ End-to-end tests written with **Playwright**, covering the live site on desktop 
 | Home | Page loads, title, `lang`/`dir` for English (LTR) and Arabic (RTL) |
 | Accessibility | Skip-to-content link exists |
 | Catalog | Shop page lists products; category pages render the right heading |
-| Product | Product title + add-to-cart action are present |
+| Product | Product title renders; user must pick a size before **Add to cart** is enabled |
 | Errors | Unknown routes return HTTP 404 |
 
 ## Run locally
