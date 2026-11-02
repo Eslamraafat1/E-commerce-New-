@@ -46,12 +46,26 @@ test.describe('Catalog', () => {
 });
 
 test.describe('Product page', () => {
-  test('shows product name and add-to-cart action', async ({ page }) => {
+  test('shows product name', async ({ page }) => {
     const res = await page.goto('/en/products/court-low-sneaker');
     expect(res.status()).toBe(200);
     await expect(page).toHaveTitle(/Court Low Sneaker/);
     await expect(page.getByRole('heading', { level: 1, name: /Court Low Sneaker/i })).toBeVisible();
-    expect(await page.getByText(/add to (cart|bag)/i).count()).toBeGreaterThan(0);
+  });
+
+  test('user must pick a size before adding to cart', async ({ page }) => {
+    await page.goto('/en/products/court-low-sneaker');
+    // before choosing a size, the CTA asks the user to select an option
+    await expect(page.getByRole('button', { name: /select an option/i })).not.toHaveCount(0);
+    await expect(page.getByRole('button', { name: /^add to cart$/i })).toHaveCount(0);
+
+    // choose a size (rendered as a radio group)
+    const size = page.getByRole('radio', { name: '42', exact: true }).first();
+    await size.click();
+    await expect(size).toHaveAttribute('aria-checked', 'true');
+
+    // the CTA becomes "Add to cart"
+    await expect(page.getByRole('button', { name: /^add to cart$/i })).not.toHaveCount(0);
   });
 });
 
