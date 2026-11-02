@@ -26,7 +26,8 @@ test.describe('Catalog', () => {
   test('Shop page lists products', async ({ page }) => {
     const res = await page.goto('/en/shop');
     expect(res.status()).toBe(200);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Shop all/i);
+    // headings are split into animated letters, so assert on the accessible name
+    await expect(page.getByRole('heading', { level: 1, name: /Shop all/i })).toBeVisible();
     // products are rendered client-side, so wait for the first card link
     await expect(page.locator('a[href*="/en/products/"]').first()).toBeAttached({ timeout: 20_000 });
   });
@@ -39,7 +40,7 @@ test.describe('Catalog', () => {
     test(`Category page: ${name}`, async ({ page }) => {
       const res = await page.goto(`/en/categories/${slug}`);
       expect(res.status()).toBe(200);
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText(new RegExp(name, 'i'));
+      await expect(page.getByRole('heading', { level: 1, name: new RegExp(name, 'i') })).toBeVisible();
     });
   }
 });
@@ -49,7 +50,7 @@ test.describe('Product page', () => {
     const res = await page.goto('/en/products/court-low-sneaker');
     expect(res.status()).toBe(200);
     await expect(page).toHaveTitle(/Court Low Sneaker/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Court Low Sneaker/i);
+    await expect(page.getByRole('heading', { level: 1, name: /Court Low Sneaker/i })).toBeVisible();
     expect(await page.getByText(/add to (cart|bag)/i).count()).toBeGreaterThan(0);
   });
 });
