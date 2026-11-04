@@ -6,23 +6,52 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   e2e:
+    name: Lint, build & E2E (local production build)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: e2e
+    timeout-minutes: 30
+    env:
+      PORT: 3000
+      BASE_URL: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            e2e/package-lock.json
+
+      - name: Install app dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start production server
+        run: |
+          npm start > server.log 2>&1 &
+          npx --yes wait-on@8.0.5 --timeout 60000 http-get://localhost:3000/en
+
       - name: Install test dependencies
-        run: npm install
+        working-directory: e2e
+        run: npm ci
       - name: Install Playwright browser
+        working-directory: e2e
         run: npx playwright install --with-deps chromium
-      - name: Run E2E tests
+      - name: Run E2E tests against the local build
+        working-directory: e2e
         run: npx playwright test
+
+      - name: Server log
+        if: failure()
+        run: tail -n 200 server.log
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
