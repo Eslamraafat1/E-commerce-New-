@@ -1,12 +1,18 @@
 {
-  "name": "my-project",
+  "name": "vanta-storefront",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:e2e",
+    "test:e2e": "npm --prefix e2e test"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.2",

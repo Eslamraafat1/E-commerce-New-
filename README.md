@@ -102,10 +102,12 @@ What the code actually implements:
 
 | Technique | Where |
 |---|---|
-| Metadata API with title template, description, Open Graph and Twitter cards | `app/[locale]/layout.tsx` (`generateMetadata`) |
-| Per-page **canonical URLs + `hreflang` alternates** (`en` / `ar`) | `lib/page.ts` (`pageMeta`) |
-| **Product JSON-LD** (`Product`, `AggregateOffer`, `AggregateRating`, availability), escaped against `</script>` injection | `app/[locale]/products/[slug]/page.tsx` |
-| Product-specific Open Graph images | product `generateMetadata` |
+| Metadata API with title template, description, Open Graph and Twitter cards (`summary_large_image`) on every page | `app/[locale]/layout.tsx`, `lib/page.ts` (`pageMeta`) |
+| Per-page **absolute canonical URLs + `hreflang` alternates** (`en` / `ar` / `x-default`) | `lib/page.ts` (`pageMeta`) |
+| **Site URL that can never resolve to localhost in production**: `NEXT_PUBLIC_SITE_URL` → Vercel production domain → hard-coded production URL | `config/store.ts` (`resolveSiteUrl`) |
+| **Branded Open Graph / Twitter image** generated at build time with `ImageResponse` (1200×630, per locale) | `app/[locale]/opengraph-image.tsx`, `twitter-image.tsx` |
+| **JSON-LD**: `Organization` + `WebSite` with `SearchAction` (home), `Product` with `AggregateOffer` and availability (product pages), `BreadcrumbList` (product and category pages), all escaped against `</script>` injection | `lib/seo.ts`, page files |
+| Product-specific Open Graph images (product photo) | product `generateMetadata` |
 | Dynamic **`sitemap.xml`** covering every static page, category, collection, article and product in both locales, with `xhtml:link` hreflang alternates | `app/sitemap.ts` |
 | **`robots.txt`** that blocks `/api/`, cart, checkout, account, admin and order confirmation | `app/robots.ts` |
 | `noindex` on private and utility pages (account, search, recently viewed, auth) | `pageMeta(..., noindex = true)` |
@@ -114,33 +116,36 @@ What the code actually implements:
 | Heavy client components code-split with `next/dynamic` (3D scene, Quick View, cart drawer, command palette) | `components/home/hero.tsx`, `components/providers/ui.tsx` |
 | `next/font` self-hosted fonts with `display: swap` and a per-locale font stack | `app/[locale]/layout.tsx` |
 | Responsive `viewport` and `themeColor` for light and dark | `app/[locale]/layout.tsx` |
-| Real HTTP **404** for unknown routes (catch-all `[...rest]` → `notFound()`) | `app/[locale]/[...rest]/page.tsx` |
+| Real HTTP **404** for unknown routes (catch-all `[...rest]` → `notFound()`) and for unknown product / category / collection / article / policy slugs (checked in `proxy.ts` before streaming starts, so they are not "soft 404s") | `app/[locale]/[...rest]/page.tsx`, `proxy.ts` |
+
+Sample ratings are shown in the UI but deliberately **not** emitted as `AggregateRating` structured data, because Google requires review markup to reflect genuine reviews.
 
 ## Testing & QA
 
 ### Automated: Playwright E2E
-The suite in [`e2e/`](e2e) runs against the deployed site (or any `BASE_URL`) in **two projects, Desktop Chrome and Mobile Chrome (Pixel 7)**, which gives **20 test runs** (10 tests × 2 viewports):
+The suite in [`e2e/`](e2e) runs in **two projects, Desktop Chrome and Mobile Chrome (Pixel 7)**. It has **31 tests**: 19 user-flow and smoke tests run on both viewports and 12 SEO tests run once (they are viewport-independent), so a full run is **62 test runs: 50 executed, 12 skipped by design**.
 
-| Area | What is asserted |
+| Spec | What is asserted |
 |---|---|
-| i18n | `/en` returns 200 with `lang="en"` `dir="ltr"`; `/ar` switches to `lang="ar"` `dir="rtl"` |
-| Accessibility | Skip-to-content link is present |
-| Catalog | Shop page renders its H1 and product links; Fashion, Electronics and Accessories category pages render the right heading |
-| Product | Title and H1 render; **Add to cart stays locked until a size is picked** (ARIA radio `aria-checked`) |
-| Errors | Unknown routes return HTTP **404** |
+| `checkout.spec.js` | **Add to cart → header count → cart totals → checkout → demo order.** Size must be chosen; the cart button's accessible name goes `Cart (0)` → `Cart (1)` → `Cart (2)`; subtotal / shipping / total are checked, including the free-shipping threshold; an invalid discount code is rejected and `VANTA10` takes 10% off. Checkout submits empty, invalid-email, invalid-phone and too-short-address values and asserts the **Zod error messages** and `aria-invalid`, then completes all five steps, places the demo order (re-priced by `POST /api/orders`), lands on the confirmation page and the cart is emptied |
+| `catalog.spec.js` | Browse from the categories index into a category; **sorting** by price writes `?sort=` to the URL and the visible prices are in order; a **price filter** writes `?max=` to the URL, narrows the result count, survives a reload and can be removed (desktop sidebar and mobile filter drawer) |
+| `i18n-a11y.spec.js` | **Language switch EN → AR** keeps the page, sets `lang="ar"` `dir="rtl"`, shows Arabic content and is remembered by the locale redirect; **theme toggle** flips and persists `data-theme`; unknown pages and unknown product slugs return HTTP **404** with the localized 404 page |
+| `seo.spec.js` | On `/en`, `/ar`, shop, category and product pages: canonical, `hreflang` (en / ar / x-default), `og:url` and `og:image` are **absolute https URLs and never localhost**; Twitter card type; JSON-LD parses and contains `WebSite` + `SearchAction`, `Product` with an offer, and `BreadcrumbList`; the OG image is a generated PNG; `robots.txt` blocks private areas and points to an absolute sitemap; `sitemap.xml` lists 100+ URLs in both locales with hreflang alternates; private pages are `noindex` |
+| `smoke.spec.js` | Home in both locales (`lang`/`dir`), skip link, shop and category headings, product title, Add to cart locked until a size is picked, 404 for unknown routes |
 
-Tests use role- and accessible-name-based locators (`getByRole`) rather than brittle CSS selectors.
+Tests use role- and accessible-name-based locators (`getByRole`, `getByLabel`) rather than brittle CSS selectors, and wait on real UI state instead of fixed timeouts.
 
-**CI:** [`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) runs the suite on every push to `main`, on every pull request, and on manual dispatch (Node 20, Chromium). Failed tests are retried twice with traces on the first retry, and the HTML report is uploaded as a build artifact for 14 days.
+**CI:** [`.github/workflows/e2e.yml`](.github/workflows/e2e.yml) runs on every push to `main`, on every pull request and on manual dispatch (Node 22, Chromium): `npm ci` → **lint** → **production build** → `npm start` → the full E2E suite **against that local build**. Failed tests are retried twice with traces on the first retry, and the HTML report is uploaded as a build artifact for 14 days.
 
 ```bash
-cd e2e
-npm install
-npx playwright install chromium
-npm test                                  # against the live site
-BASE_URL=http://localhost:3000 npm test   # against a local dev server
-npm run report                            # open the HTML report
+npm install && npm run build && npm start   # terminal 1: local production build
+cd e2e && npm ci && npx playwright install chromium
+BASE_URL=http://localhost:3000 npm test     # terminal 2: against the local build
+npm test                                    # against the live site (default BASE_URL)
+npm run report                              # open the HTML report
 ```
+
+From the repository root, `npm test` (alias of `npm run test:e2e`) runs the same suite.
 
 ### Manual QA
 According to [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md), the app was also checked by hand: a responsive sweep of 40 routes × 2 locales at 9 widths (320 to 1920 px) looking for horizontal overflow and JS errors, plus walkthroughs of filters, quick view focus handling, the variant → SKU/image mapping, discount codes, checkout validation and the language and theme switches. That file also lists the known limitations.
@@ -154,6 +159,7 @@ According to [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md), the app was
 │   │   ├── layout.tsx       # <html lang dir>, fonts, metadata, providers
 │   │   └── [...rest]/       # Catch-all → real 404
 │   ├── api/                 # Demo Route Handlers: products, categories, collections, search, orders, contact
+│   ├── [locale]/opengraph-image.tsx  # Generated social share image
 │   ├── sitemap.ts           # Multilingual sitemap with hreflang
 │   └── robots.ts
 ├── components/
@@ -167,18 +173,19 @@ According to [`IMPLEMENTATION_STATUS.md`](IMPLEMENTATION_STATUS.md), the app was
 ├── lib/
 │   ├── api/                 # Typed client, Zod schemas, errors, cart/pricing logic
 │   ├── i18n/                # en / ar dictionaries
+│   ├── seo.ts               # JSON-LD builders, absolute URLs, shared Open Graph fields
 │   └── persisted-store.ts   # useSyncExternalStore + localStorage
 ├── config/store.ts          # Brand, locales, currency, shipping, discount rules
 ├── data/demo/               # Sample catalog (products, categories, journal)
-├── e2e/                     # Playwright suite + config
+├── e2e/                     # Playwright suite (flows, SEO, i18n, smoke) + config
 ├── docs/                    # Backend integration guide, screenshots
-├── proxy.ts                 # Locale detection and redirect
+├── proxy.ts                 # Locale detection/redirect + real 404 for unknown slugs
 └── next.config.ts           # Cache Components, image formats, Turbopack
 ```
 
 ## Getting Started
 
-**Prerequisites:** Node.js 20 or newer (CI runs Node 20) and npm.
+**Prerequisites:** Node.js 20.9 or newer (`engines` in `package.json`; CI runs Node 22) and npm.
 
 ```bash
 git clone https://github.com/Eslamraafat1/E-commerce-New-.git
@@ -196,7 +203,7 @@ Open http://localhost:3000. You will be redirected to `/en` or `/ar`.
 |---|---|---|
 | `NEXT_PUBLIC_USE_DEMO_API` | `true` | `true` uses the built-in demo API (`/api/*`); `false` uses your backend |
 | `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8000/api` | Real backend base URL (example value only) |
-| `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | Absolute URL for canonical links, Open Graph, sitemap and robots |
+| `NEXT_PUBLIC_SITE_URL` | *(empty)* | Optional absolute URL for canonical links, hreflang, Open Graph, JSON-LD, sitemap and robots. When empty, Vercel's production domain is used, then `https://e-commerce-new2-delta.vercel.app`. Never localhost |
 
 ### Scripts
 
@@ -206,13 +213,18 @@ Open http://localhost:3000. You will be redirected to `/en` or `/ar`.
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build |
 | `npm run lint` | Run ESLint |
-| `cd e2e && npm test` | Run the Playwright E2E suite |
+| `npm run typecheck` | Type-check with `tsc --noEmit` |
+| `npm test` / `npm run test:e2e` | Run the Playwright E2E suite (install it first with `cd e2e && npm ci`) |
 
 ## Deployment
 
 The app is deployed on **Vercel**: https://e-commerce-new2-delta.vercel.app/en
 
-To deploy your own copy, import the repository into Vercel (it detects Next.js automatically) and set the environment variables above. Set `NEXT_PUBLIC_SITE_URL` to the production domain so canonical URLs, hreflang links and the sitemap point to it. Before handling real customers, replace demo auth, payments and persistence as described in [`docs/BACKEND_INTEGRATION.md`](docs/BACKEND_INTEGRATION.md).
+To deploy your own copy, import the repository into Vercel (it detects Next.js automatically) and set the environment variables above. Canonical URLs, hreflang links and the sitemap use `NEXT_PUBLIC_SITE_URL` if set, otherwise Vercel's production domain, so they never fall back to localhost; set it explicitly when you use a custom domain. Before handling real customers, replace demo auth, payments and persistence as described in [`docs/BACKEND_INTEGRATION.md`](docs/BACKEND_INTEGRATION.md).
+
+## License
+
+[MIT](LICENSE) © 2026 Eslam Raafat. Product photography is loaded from Unsplash and remains subject to the Unsplash License.
 
 ## Author
 
