@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/journal/
   const a = await getArticle(slug);
   if (!a) return {};
   const m = pageMeta(locale, a.title[locale], `/journal/${slug}`, a.excerpt[locale]);
-  return { ...m, openGraph: { ...m.openGraph, type: "article" as const, images: [{ url: a.image }] } };
+  return { ...m, openGraph: { ...m.openGraph, type: "article" as const, images: [{ url: a.image }] }, twitter: { ...m.twitter, images: [{ url: a.image }] } };
 }
 
 export default async function ArticlePage({ params }: PageProps<"/[locale]/journal/[slug]">) {

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import "../globals.css";
 import { localeMeta, locales, store } from "@/config/store";
 import { getDict, hasLocale } from "@/lib/i18n";
+import { ogBase } from "@/lib/seo";
 import { I18nProvider } from "@/components/providers/i18n";
 import { UIProvider } from "@/components/providers/ui";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
@@ -33,9 +34,9 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
     metadataBase: new URL(store.siteUrl),
     title: { default: `${store.name} — ${store.tagline[locale]}`, template: `%s · ${store.name}` },
     description: dict["meta.description"],
-    alternates: { languages: { en: "/en", ar: "/ar" } },
-    openGraph: { type: "website", siteName: store.name, locale: localeMeta[locale].intl.replace("-", "_"), title: `${store.name} — ${store.tagline[locale]}`, description: dict["meta.description"] },
-    twitter: { card: "summary_large_image" },
+    alternates: { languages: { en: "/en", ar: "/ar", "x-default": "/en" } },
+    openGraph: { ...ogBase(locale), title: `${store.name} — ${store.tagline[locale]}`, description: dict["meta.description"], url: `/${locale}` },
+    twitter: { card: "summary_large_image", title: `${store.name} — ${store.tagline[locale]}`, description: dict["meta.description"] },
   };
 }
 

@@ -10,11 +10,25 @@ export const localeMeta: Record<Locale, { dir: "ltr" | "rtl"; intl: string; labe
   ar: { dir: "rtl", intl: "ar-EG", label: "العربية", short: "ع" },
 };
 
+/** Production deployment, used when no site URL is configured so SEO URLs never point to localhost. */
+export const PRODUCTION_URL = "https://e-commerce-new2-delta.vercel.app";
+
+/**
+ * Absolute origin used for canonical URLs, hreflang, Open Graph, JSON-LD, robots.txt and sitemap.xml.
+ * Order: explicit NEXT_PUBLIC_SITE_URL → Vercel production domain → the known production URL.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  const url = explicit || (vercel ? `https://${vercel}` : "") || PRODUCTION_URL;
+  return url.replace(/\/+$/, "");
+}
+
 export const store = {
   name: "VANTA",
   tagline: { en: "Beyond Shopping", ar: "ما بعد التسوق" },
   currency: "USD",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  siteUrl: resolveSiteUrl(),
   /** Contact details are intentionally empty placeholders: never invent real ones. */
   contact: { email: "hello@example.com", phone: "", address: "" },
   social: [

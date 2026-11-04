@@ -176,7 +176,7 @@ export function Catalog({ base = {}, defaultSort, showSearch = true, hideCategor
           </button>
           <label className="flex items-center gap-2 text-sm">
             <span className="hidden text-muted sm:inline">{t("sort.label")}</span>
-            <select className="field !min-h-11 !w-auto !py-1 pe-8" value={query.sort ?? "featured"} onChange={(e) => update({ sort: e.target.value === (defaultSort ?? "featured") ? undefined : e.target.value })}>
+            <select aria-label={t("sort.label")} className="field !min-h-11 !w-auto !py-1 pe-8" value={query.sort ?? "featured"} onChange={(e) => update({ sort: e.target.value === (defaultSort ?? "featured") ? undefined : e.target.value })}>
               {SORTS.map((s) => <option key={s} value={s}>{t(`sort.${s}` as never)}</option>)}
             </select>
           </label>

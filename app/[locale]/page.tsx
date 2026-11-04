@@ -12,11 +12,20 @@ import { BentoGrid, BestSellers, NewArrivals, ProductInFocus, TextureSpotlight }
 import { Benefits, BrandStory, Collections, Discovery, FaqSection, FinalCta, JournalSection, Lifestyles, NewsletterSection, Testimonials } from "@/components/home/sections-c";
 import { img } from "@/data/demo/images";
 import { SectionNavClient } from "@/components/home/section-nav-client";
+import { store } from "@/config/store";
+import { jsonLdHtml, ogBase, organizationJsonLd } from "@/lib/seo";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(locale)) return {};
-  return { alternates: { canonical: `/${locale}`, languages: { en: "/en", ar: "/ar" } }, description: getDict(locale)["meta.description"] };
+  const title = `${store.name} — ${store.tagline[locale]}`;
+  const description = getDict(locale)["meta.description"];
+  return {
+    alternates: { canonical: `/${locale}`, languages: { en: "/en", ar: "/ar", "x-default": "/en" } },
+    description,
+    openGraph: { ...ogBase(locale), title, description, url: `/${locale}` },
+    twitter: { card: "summary_large_image", title, description },
+  };
 }
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
@@ -52,6 +61,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(organizationJsonLd(locale))} />
       <SectionNavClient />
       <Hero slides={slides} />
       <BrandMarquee />

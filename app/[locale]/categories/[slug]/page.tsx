@@ -4,6 +4,7 @@ import { DetailBanner } from "@/components/shop/banner";
 import { Catalog, CatalogSkeleton } from "@/components/shop/catalog";
 import { getCategories, getCategory } from "@/lib/api/categories";
 import { pageMeta, resolveLocale } from "@/lib/page";
+import { breadcrumbJsonLd, jsonLdHtml } from "@/lib/seo";
 
 export async function generateStaticParams() {
   return (await getCategories()).map((c) => ({ slug: c.slug }));
@@ -18,11 +19,17 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/categori
 }
 
 export default async function CategoryPage({ params }: PageProps<"/[locale]/categories/[slug]">) {
+  const locale = await resolveLocale(params);
   const { slug } = await params;
   const c = await getCategory(slug);
   if (!c) notFound();
+  const crumbsLd = breadcrumbJsonLd(locale, [
+    { name: { key: "nav.categories" }, path: "/categories" },
+    { name: c.name[locale], path: `/categories/${c.slug}` },
+  ]);
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(crumbsLd)} />
       <DetailBanner item={c} kind="category" crumbs={[{ label: { key: "nav.categories" }, href: "/categories" }, { label: c.name }]} />
       <div className="container-x pb-24">
         <Suspense fallback={<CatalogSkeleton />}><Catalog base={{ category: [c.id] }} hideCategoryFilter /></Suspense>

@@ -41,7 +41,7 @@ function Field({ form, name, label, type = "text", auto, span, req = true, input
   return (
     <div className={span ? "sm:col-span-2" : ""}>
       <label htmlFor={`f-${name}`} className="label">{label}{!req && <span className="font-normal text-muted"> ({t("form.optional")})</span>}</label>
-      <input id={`f-${name}`} type={type} autoComplete={auto} inputMode={inputMode} className="field" aria-invalid={!!err} aria-describedby={err ? `e-${name}` : undefined} aria-required={req} {...form.register(name)} />
+      <input id={`f-${name}`} type={type} autoComplete={auto} inputMode={inputMode} className="field" aria-invalid={!!err} aria-describedby={err ? `e-${name}` : undefined} aria-required={req} {...form.register(name, { onChange: () => { if (form.formState.errors[name]) void form.trigger(name); } })} />
       {err && <p id={`e-${name}`} className="err" role="alert">{err.message as string}</p>}
     </div>
   );
