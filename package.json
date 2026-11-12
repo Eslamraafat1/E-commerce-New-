@@ -1,6 +1,32 @@
 {
   "name": "vanta-storefront",
   "version": "0.1.0",
+  "description": "Bilingual 3D e-commerce store built with Next.js, TypeScript, Three.js (R3F), GSAP & Framer Motion. Forms with React Hook Form + Zod.",
+  "author": "Eslam Raafat <https://new-portfolio-ashy-xi.vercel.app>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eslamraafat1/E-commerce-New-.git"
+  },
+  "homepage": "https://e-commerce-new2-delta.vercel.app/en",
+  "bugs": {
+    "url": "https://github.com/Eslamraafat1/E-commerce-New-/issues"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "threejs",
+    "react-three-fiber",
+    "gsap",
+    "framer-motion",
+    "zod",
+    "tailwindcss",
+    "typescript",
+    "smooth-scroll",
+    "arabic",
+    "rtl",
+    "portfolio"
+  ],
   "private": true,
   "engines": {
     "node": ">=20.9"
@@ -10,7 +36,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "npm run test:e2e",
     "test:e2e": "npm --prefix e2e test"
   },
